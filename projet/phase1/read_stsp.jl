@@ -123,8 +123,11 @@ function read_edges(header::Dict{String}{String}, filename::String)
             if edge_weight_section
                 data = split(line)
                 n_data = length(data)
+                poids = parse.(data)
+
                 start = 0
                 while n_data > 0
+                    poid = poids[n_data]
                     n_on_this_line = min(n_to_read, n_data)
 
                     for j = start:start + n_on_this_line
@@ -163,9 +166,11 @@ function read_edges(header::Dict{String}{String}, filename::String)
                 end
             end
         end
+
     end
     close(file)
     return edges
+
 end
 
 """Renvoie les noeuds et les aretes du graphe"""

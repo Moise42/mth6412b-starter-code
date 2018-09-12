@@ -30,5 +30,6 @@ getData(node::AbstractNode) = node.data
 function show(node::AbstractNode)
 
     s = string("Node ", getName(node), ", data: ", getData(node))
-    println(s)
+    #println(s)
+    s
 end
