@@ -94,6 +94,7 @@ end
 function read_edges(header::Dict{String}{String}, filename::String)
 
     edges = []
+    weights = []
     edge_weight_format = header["EDGE_WEIGHT_FORMAT"]
     known_edge_weight_formats = ["FULL_MATRIX", "UPPER_ROW", "LOWER_ROW",
     "UPPER_DIAG_ROW", "LOWER_DIAG_ROW", "UPPER_COL", "LOWER_COL",
@@ -123,14 +124,13 @@ function read_edges(header::Dict{String}{String}, filename::String)
             if edge_weight_section
                 data = split(line)
                 n_data = length(data)
-                poids = parse.(data)
+                line_weight = parse.(data)
 
                 start = 0
                 while n_data > 0
-                    poid = poids[n_data]
                     n_on_this_line = min(n_to_read, n_data)
 
-                    for j = start:start + n_on_this_line
+                    for j = start+1:start + n_on_this_line
                         n_edges = n_edges + 1
                         if edge_weight_format in ["UPPER_ROW", "LOWER_COL"]
                             edge = (k, i+k+1)
@@ -145,7 +145,9 @@ function read_edges(header::Dict{String}{String}, filename::String)
                         else
                             warn("Unknown format - function read_edges")
                         end
+                        weight = line_weight[j]
                         push!(edges, edge)
+                        push!(weights, weight)
                         i += 1
                     end
 
@@ -169,7 +171,7 @@ function read_edges(header::Dict{String}{String}, filename::String)
 
     end
     close(file)
-    return edges
+    return edges, weights
 
 end
 
@@ -186,7 +188,7 @@ function read_stsp(filename::String)
     println("✓")
 
     Base.print("Reading of edges : ")
-    edges_brut = read_edges(header, filename)
+    edges_brut, weights_brut = read_edges(header, filename)
     edges = []
     for k = 1 : dim
         edge_list = Int[]
@@ -205,7 +207,7 @@ function read_stsp(filename::String)
         edges[k] = sort(edges[k])
     end
     println("✓")
-    return graph_nodes, edges
+    return graph_nodes, edges, weights_brut
 end
 
 """Affiche un graphe étant données un ensemble de noeuds et d'arêtes.
@@ -238,6 +240,6 @@ end
 
 """Fonction de commodité qui lit un fichier stsp et trace le graphe."""
 function plot_graph(filename::String)
-    graph_nodes, edges = read_stsp(filename)
+    graph_nodes, edges, weights = read_stsp(filename)
     plot_graph(graph_nodes, edges)
 end
