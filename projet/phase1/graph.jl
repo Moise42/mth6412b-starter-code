@@ -36,7 +36,7 @@ function add_edge!(graph::Graph{T}, edge::Edge{T}) where T
 end
 
 """Renvoie le nom du graphe."""
-get_name(graph::AbstractGraph) = graph.name
+getName(graph::AbstractGraph) = graph.name
 
 """Renvoie la liste des noeuds du graphe."""
 getNodes(graph::AbstractGraph) = graph.nodes
@@ -45,16 +45,16 @@ getNodes(graph::AbstractGraph) = graph.nodes
 getEdges(graph::AbstractGraph) = graph.edges
 
 """Renvoie le nombre de noeuds du graphe."""
-get_nb_nodes(graph::AbstractGraph) = length(graph.nodes)
+getNbNodes(graph::AbstractGraph) = length(graph.nodes)
 
 """Renvoie le nombre d arretes du graphe."""
-get_nb_edges(graph::AbstractGraph) = length(graph.edges)
+getNbEdges(graph::AbstractGraph) = length(graph.edges)
 
 """Affiche un graphe"""
 function show(graph::Graph)
-	name = get_name(graph)
-	nb_nodes = get_nb_nodes(graph)
-	nb_edges = get_nb_edges(graph)
+	name = getName(graph)
+	nb_nodes = getNbNodes(graph)
+	nb_edges = getNbEdges(graph)
 	s = string("Graph ", name, " has ", nb_nodes, " nodes and ", nb_edges, " edge")
 	for node in getNodes(graph)
 		s = string(s, "\n", show(node))

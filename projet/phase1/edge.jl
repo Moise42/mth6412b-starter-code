@@ -7,7 +7,7 @@ abstract type AbstractEdge{T} end
 mutable struct Edge{T} <: AbstractEdge{T}
     node1::AbstractNode{T}
     node2::AbstractNode{T}
-    poid::Integer
+    weight::Integer
 
 #On represente une arrete avec deux noeuds et un poid.
 end
@@ -19,10 +19,10 @@ getNode1(edge::AbstractEdge) = edge.node1
 getNode2(edge::AbstractEdge) = edge.node2
 
 """Renvoie le poid de l arrete."""
-getPoid(edge::AbstractEdge) = edge.poid
+getWeight(edge::AbstractEdge) = edge.weight
 
 """Affiche un edge"""
 function show(edge::AbstractEdge)
-    s = string("Edge entre ", getName(getNode1(edge)), " et ", getName(getNode2(edge)), " de poid ", getPoid(edge));
+    s = string("Edge entre ", getName(getNode1(edge)), " et ", getName(getNode2(edge)), " de poid ", getWeight(edge));
     s
 end
