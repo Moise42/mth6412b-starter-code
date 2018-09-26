@@ -26,3 +26,6 @@ function show(edge::AbstractEdge)
     s = string("Edge entre ", getName(getNode1(edge)), " et ", getName(getNode2(edge)), " de poid ", getWeight(edge));
     s
 end
+
+"""Surchage de l operateur inferieur qui permettra de trier un tableau d aretes par ordre de poids avec sort"""
+isless(e1::Edge, e2::Edge) = getWeight(e1) < getWeight(e2)
