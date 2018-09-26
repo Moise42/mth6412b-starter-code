@@ -13,10 +13,34 @@ edge2=Edge(node2, node1, 5)
 add_edge!(graph1,edge2)
 show(graph1)
 
-e = read_edges(read_header(graph_file), graph_file)
-e
+edges = read_edges(read_header(graph_file), graph_file)
+nodes = read_nodes(read_header(graph_file), graph_file)
+
+N = Vector{Node}();
+for k in keys(nodes)
+    push!(N,Node(graph_file,k))
+end
+
+E = Vector{Edge}();
+es = edges[1]
+ws = edges[2]
+node1_data = 0
+node2_data = 0
+for k = 1:length(es)
+    ed = es[k]
+    node1_data = findall(x->getData(x)==ed[1],N)
+    node2_data = findall(x->getData(x)==ed[2],N)
+    edge = Edge(Node(graph_file, node1_data[1]), Node(graph_file, node2_data[1]), ws[k])
+    push!(E,edge)
+end
+
+for edge in E
+    println(getWeight(edge))
+end
+
+
+#index_sort=sortperm(e[2])
+
 #show(edge)
 #show(node1)
-plot_graph(graph_file)
-
-#sdfghsghnsdfghnsdfghdfghk,sjdfvhlfbhlkujhklfyljfg
+#plot_graph(graph_file)
