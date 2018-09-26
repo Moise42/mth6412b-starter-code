@@ -130,7 +130,7 @@ function read_edges(header::Dict{String}{String}, filename::String)
                 while n_data > 0
                     n_on_this_line = min(n_to_read, n_data)
 
-                    for j = start+1:start + n_on_this_line
+                    for j = start:start + n_on_this_line - 1
                         n_edges = n_edges + 1
                         if edge_weight_format in ["UPPER_ROW", "LOWER_COL"]
                             edge = (k, i+k+1)
@@ -145,7 +145,7 @@ function read_edges(header::Dict{String}{String}, filename::String)
                         else
                             warn("Unknown format - function read_edges")
                         end
-                        weight = line_weight[j]
+                        weight = line_weight[j+1]
                         push!(edges, edge)
                         push!(weights, weight)
                         i += 1
