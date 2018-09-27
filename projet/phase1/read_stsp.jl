@@ -266,7 +266,9 @@ function dataToNodeAndEdge(nodes_dic::Dict, edges::Tuple)
     ### formatage des noeuds du graphe en type Node
     N = Vector{Node}();
     for k in keys(nodes)
-        push!(N,Node(graph_file,k))
+        node = Node(graph_file,k)
+        node.parent = node;
+        push!(N,node)
     end
 
     ### formatage des aretes du graphe en type Edge
@@ -275,7 +277,11 @@ function dataToNodeAndEdge(nodes_dic::Dict, edges::Tuple)
     ws = edges[2]
     for k = 1:length(es)
         ed = es[k]
-        push!(E,Edge(Node(graph_file, ed[1]), Node(graph_file, ed[2]), ws[k]))
+        node1 = Node(graph_file, ed[1])
+        node2 = Node(graph_file, ed[2])
+        node1.parent = node1
+        node2.parent = node2
+        push!(E,Edge(node1, node2, ws[k]))
     end
 
     (N,E)

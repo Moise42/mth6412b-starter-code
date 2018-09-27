@@ -1,13 +1,13 @@
 import Base.isless, Base.isequal
 
-include("./projet/phase1/read_stsp.jl")
 include("./projet/phase1/node.jl")
 include("./projet/phase1/edge.jl")
+include("./projet/phase1/read_stsp.jl")
 include("./projet/phase1/graph.jl")
 include("./projet/phase1/kruskal.jl")
 
-graph_file = "bayg29.tsp"
-graph_path = "./instances/stsp/"*graph_file
+graph_file = "bayg29"
+graph_path = "./instances/stsp/"*graph_file*".tsp"
 
 ### pour le fichier test
 node1=Node("a", 2)
@@ -29,8 +29,10 @@ E = data[2]
 
 ### Creation de l objet kruskal, et calcul de l arbre de recouvrement minimal
 kruskal = Kruskal(N[:],E[:])
-buildMST!(kruskal::Kruskal)
+buildMST!(kruskal)
 
 ### plot
 plot_graph(nodes, kruskal.edges)
+savefig("plot/graph_"*graph_file)
 plot_graph(nodes, kruskal.mst)
+savefig("plot/mst_"*graph_file)

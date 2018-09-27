@@ -27,6 +27,7 @@ function buildMST!(kruskal::Kruskal)
         node2_idx = findall(x->isequal(x,edge.node2), N)[1]
         # on verifie que les noeuds n appartiennent pas a la meme classe d equivalence (i.e. meme composante connexe)
         if isequal(kruskal.nodes[node1_idx].parent,kruskal.nodes[node2_idx].parent) == false
+
             # si c est bien le cas, on ajoute l arete a l arbres de recouvrement
             push!(kruskal.mst,edge)
             # et on unit les classes d equivalence des deux noeuds
@@ -34,6 +35,9 @@ function buildMST!(kruskal::Kruskal)
             for idx in class_eq_idx
                 kruskal.nodes[idx].parent = kruskal.nodes[node1_idx].parent
             end
+
+            #kruskal.nodes[node2_idx].parent = kruskal.nodes[node1_idx].parent
+
         end
     end
     kruskal.mst
