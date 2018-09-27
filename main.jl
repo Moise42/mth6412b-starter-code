@@ -23,38 +23,14 @@ show(graph1)
 header = read_header(graph_path)
 edges = read_edges(header, graph_path)
 nodes = read_nodes(header, graph_path)
-
-### formatage des noeuds du graphe en type Node
-N = Vector{Node}();
-for k in keys(nodes)
-    push!(N,Node(graph_file,k))
-end
-
-### formatage des aretes du graphe en type Edge
-E = Vector{Edge}();
-es = edges[1]
-ws = edges[2]
-for k = 1:length(es)
-    ed = es[k]
-    #node1_data = findall(x->getData(x)==ed[1],N)[1]
-    #node2_data = findall(x->getData(x)==ed[2],N)[1]
-    edge = Edge(Node(graph_file, ed[1]), Node(graph_file, ed[2]), ws[k])
-    push!(E,edge)
-end
+data = dataToNodeAndEdge(nodes, edges)
+N = data[1]
+E = data[2]
 
 ### Creation de l objet kruskal, et calcul de l arbre de recouvrement minimal
 kruskal = Kruskal(N[:],E[:])
 buildMST!(kruskal::Kruskal)
 
-
-
-
-"""
-edges_bruts = []
-for edge = kruskal.mst
-    edge_brut = (edge.node1.data, edge.node2.data)
-    push!(edges_bruts, edge_brut)
-end
-
-plot_graph(graph_path)
-"""
+### plot
+plot_graph(nodes, kruskal.edges)
+plot_graph(nodes, kruskal.mst)
