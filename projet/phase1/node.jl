@@ -3,6 +3,10 @@ import Base.show
 """Type abstrait dont d'autres types de noeuds dériveront."""
 abstract type AbstractNode{T} end
 
+mutable struct EmptyNodeType{T} <: AbstractNode{T}
+    data::Int64
+end
+
 """Type représentant les noeuds d'un graphe.
 
 Exemple:
@@ -15,6 +19,11 @@ Exemple:
 mutable struct Node{T} <: AbstractNode{T}
     name::String
     data::T
+    parent::AbstractNode{T}
+end
+
+function Node(name::String, data::T) where T
+    Node{T}(name,data,EmptyNodeType{T}(data))
 end
 
 # on présume que tous les noeuds dérivant d'AbstractNode
@@ -33,3 +42,6 @@ function show(node::AbstractNode)
     #println(s)
     s
 end
+
+"""Methode egale"""
+isequal(n1::Node, n2::Node) = getData(n1) == getData(n2)

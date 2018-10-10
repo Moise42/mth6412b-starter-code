@@ -133,15 +133,15 @@ function read_edges(header::Dict{String}{String}, filename::String)
                     for j = start:start + n_on_this_line - 1
                         n_edges = n_edges + 1
                         if edge_weight_format in ["UPPER_ROW", "LOWER_COL"]
-                            edge = (k, i+k+1)
+                            edge = (k+1, i+k+2)
                         elseif edge_weight_format in ["UPPER_DIAG_ROW", "LOWER_DIAG_COL"]
-                            edge = (k, i+k)
+                            edge = (k+1, i+k+1)
                         elseif edge_weight_format in ["UPPER_COL", "LOWER_ROW"]
-                            edge = (i+k+1, k)
+                            edge = (i+k+2, k+1)
                         elseif edge_weight_format in ["UPPER_DIAG_COL", "LOWER_DIAG_ROW"]
-                            edge = (i, k)
+                            edge = (i+1, k+1)
                         elseif edge_weight_format == "FULL_MATRIX"
-                            edge = (k, i)
+                            edge = (k+1, i+1)
                         else
                             warn("Unknown format - function read_edges")
                         end
@@ -242,4 +242,47 @@ end
 function plot_graph(filename::String)
     graph_nodes, edges, weights = read_stsp(filename)
     plot_graph(graph_nodes, edges)
+end
+
+"""Fonction de commodite aui trace le graphe a partir des objets Edges et d un dico de noeuds"""
+function plot_graph(nodes::Dict, edges::Vector{Edge})
+    fig = plot(legend=false)
+
+    for edge in edges
+        node1_data = edge.node1.data
+        node2_data = edge.node2.data
+        plot!([nodes[node1_data][1] nodes[node2_data][1]]', [nodes[node1_data][2] nodes[node2_data][2]]',
+        linewidth=1.5, alpha=0.75, color=:lightgray)
+    end
+    for node in nodes
+        scatter!([node[2][1]],[node[2][2]], color=:blue)
+    end
+
+    display(fig)
+end
+
+""" Transforme les donnees bruts du graphe en deux vecteur de Nodes et Edges"""
+function dataToNodeAndEdge(nodes_dic::Dict, edges::Tuple)
+    ### formatage des noeuds du graphe en type Node
+    N = Vector{Node}();
+    for k in keys(nodes)
+        node = Node(graph_file,k)
+        node.parent = node;
+        push!(N,node)
+    end
+
+    ### formatage des aretes du graphe en type Edge
+    E = Vector{Edge}();
+    es = edges[1]
+    ws = edges[2]
+    for k = 1:length(es)
+        ed = es[k]
+        node1 = Node(graph_file, ed[1])
+        node2 = Node(graph_file, ed[2])
+        node1.parent = node1
+        node2.parent = node2
+        push!(E,Edge(node1, node2, ws[k]))
+    end
+
+    (N,E)
 end
