@@ -9,22 +9,7 @@ include("./projet/phase1/kruskal.jl")
 graph_file = "bayg29"
 graph_path = "./instances/stsp/"*graph_file*".tsp"
 
-### pour le fichier test
-node1=Node("a", 2)
-node2=Node("b", 2)
-edge1 = Edge(node1, node2, 54252)
-graph1=Graph("g", [node1,node2],[edge1])
-show(graph1)
-edge2=Edge(node2, node1, 5)
-add_edge!(graph1,edge2)
-show(graph1)
 
-e = read_edges(read_header(graph_file), graph_file)
-e
-#show(edge)
-#show(node1)
-plot_graph(graph_file)
-=======
 ### Recuperation des aretes et noeuds d un graphe
 header = read_header(graph_path)
 edges = read_edges(header, graph_path)
