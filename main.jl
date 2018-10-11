@@ -19,7 +19,6 @@ edge2=Edge(node2, node1, 5)
 add_edge!(graph1,edge2)
 show(graph1)
 
-<<<<<<< HEAD
 e = read_edges(read_header(graph_file), graph_file)
 e
 #show(edge)
@@ -43,4 +42,3 @@ plot_graph(nodes, kruskal.edges)
 savefig("plot/graph_"*graph_file)
 plot_graph(nodes, kruskal.mst)
 savefig("plot/mst_"*graph_file)
->>>>>>> 3f5be8d76c6b4b5470fd4d5776099ac721e3f6fa

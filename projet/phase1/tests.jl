@@ -1,9 +1,9 @@
 using Test
-include ("./node.jl")
-include ("./edge.jl")
-include ("./graph.jl")
-include ("./kruskal.jl")
-include ("./read_stsp.jl")
+include("./node.jl")
+include("./edge.jl")
+include("./graph.jl")
+include("./kruskal.jl")
+include("./read_stsp.jl")
 
 """tests de la classe node"""
 node = Node("node", 0)
@@ -22,7 +22,7 @@ edge = Edge(node, node3, 1)
 @test getNode1(edge) == node
 @test getNode2(edge) == node3
 @test getWeight(edge) == 1
-@test show(edge) == "Edge entre node et node 3 de poid 1"
+@test show(edge) == "Edge entre node et node3 de poid 1"
 
 edge2 = Edge(node2,node3, 2)
 @test isless(edge,edge2)
@@ -50,5 +50,19 @@ add_node!(graph, noded)
 add_edge!(graph, edgec)
 @test getNbEdges(graph) == 3
 
+graph2 = Graph("graph2", [nodea], [edgea])
+@test show(graph2) == "Graph graph2 has 1 nodes and 1 edge\nNode a, data: 0\nEdge entre a et b de poid 0"
 
-"""test de kruskal"""
+""" tests de kruskal"""
+edgee = Edge(nodec, nodea, 3)
+N = Vector{Node}()
+push!(N, nodea)
+push!(N, nodeb)
+push!(N, nodec)
+E = Vector{Edge}()
+push!(E, edgea)
+push!(E, edgeb)
+push!(E, edgee)
+kruskal = Kruskal(N[:], E[:])
+buildMST!(kruskal)
+@test kruskal.mst == [edgea, edgeb]

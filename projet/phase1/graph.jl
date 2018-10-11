@@ -63,4 +63,5 @@ function show(graph::Graph)
 		s = string(s, "\n", show(edge))
 	end
 	println(s)
+	return s
 end

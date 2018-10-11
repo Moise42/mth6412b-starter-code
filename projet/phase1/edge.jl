@@ -1,4 +1,4 @@
-
+import Base.isless
 include("./node.jl")
 
 """Type abstrait dont d'autres types de edge dériveront."""
