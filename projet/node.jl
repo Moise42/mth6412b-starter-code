@@ -46,3 +46,13 @@ end
 
 """Methode egale"""
 isequal(n1::Node, n2::Node) = getData(n1) == getData(n2)
+
+function inEdges(node::AbstractNode, edges::Vector{Edge})
+    result = Vector{Edge}()
+    for edge in edges
+        if edge.node1.name == node.name || edge.node2.name == node.name
+            push!(result,edge)
+        end
+    end
+    return result
+end
