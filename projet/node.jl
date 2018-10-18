@@ -21,10 +21,11 @@ mutable struct Node{T} <: AbstractNode{T}
     name::String
     data::T
     parent::AbstractNode{T}
+    visited::Bool
 end
 
 function Node(name::String, data::T) where T
-    Node{T}(name,data,EmptyNodeType{T}(data))
+    Node{T}(name,data,EmptyNodeType{T}(data),false)
 end
 
 # on présume que tous les noeuds dérivant d'AbstractNode
@@ -36,6 +37,7 @@ getName(node::AbstractNode) = node.name
 """Renvoie les donnees contenues dans le noeud."""
 getData(node::AbstractNode) = node.data
 
+
 """Affiche un noeud"""
 function show(node::AbstractNode)
 
@@ -46,13 +48,3 @@ end
 
 """Methode egale"""
 isequal(n1::Node, n2::Node) = getData(n1) == getData(n2)
-
-function inEdges(node::AbstractNode, edges::Vector{Edge})
-    result = Vector{Edge}()
-    for edge in edges
-        if edge.node1.name == node.name || edge.node2.name == node.name
-            push!(result,edge)
-        end
-    end
-    return result
-end

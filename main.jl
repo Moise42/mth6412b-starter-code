@@ -1,12 +1,12 @@
 import Base.isless, Base.isequal
+include("./projet/node.jl")
+include("./projet/edge.jl")
+include("./projet/read_stsp.jl")
+include("./projet/graph.jl")
+include("./projet/kruskal.jl")
+include("./projet/prim.jl")
 
-include("./projet/phase1/node.jl")
-include("./projet/phase1/edge.jl")
-include("./projet/phase1/read_stsp.jl")
-include("./projet/phase1/graph.jl")
-include("./projet/phase1/kruskal.jl")
-
-graph_file = "bayg29"
+graph_file = "dantzig42"
 graph_path = "./instances/stsp/"*graph_file*".tsp"
 
 
@@ -18,12 +18,19 @@ data = dataToNodeAndEdge(nodes, edges)
 N = data[1]
 E = data[2]
 
-### Creation de l objet kruskal, et calcul de l arbre de recouvrement minimal
+## Creation de l objet kruskal, et calcul de l arbre de recouvrement minimal
 kruskal = Kruskal(N[:],E[:])
 buildMST!(kruskal)
 
-### plot
+### Creation de l objet prim, et calcul de l arbre de recouvrement minimal
+prim = Prim(N[:],E[:])
+buildMST!(prim)
+
+## plot
 plot_graph(nodes, kruskal.edges)
 savefig("plot/graph_"*graph_file)
+
 plot_graph(nodes, kruskal.mst)
-savefig("plot/mst_"*graph_file)
+savefig("plot/mst_kruskal_"*graph_file)
+plot_graph(nodes, prim.mst)
+savefig("plot/mst_prim_"*graph_file)

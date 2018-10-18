@@ -17,8 +17,23 @@ function Prim(nodes::Vector{Node}, edges::Vector{Edge})
 end
 
 function buildMST!(prim::Prim)
-    root = pop!(prim.nodes)
-    listePrio = inEdges(root,prim.edges)
-    while !isempty(listePrio)
-        
+    prim.mst = Vector{Edge}()
+    node = prim.nodes[1]
+    node.visited = true
+    priorList = inEdges(node, prim.edges)
+    while !isempty(priorList)
+        sort!(priorList)
+        edge = popfirst!(priorList)
+        idx = findall(x->isequal(x,edge.node1), prim.nodes)[1]
+        prim.nodes[idx].visited ? node = edge.node2 : node = edge.node1
+        idx = findall(x->isequal(x,node), prim.nodes)[1]
+        if prim.nodes[idx].visited == false
+            prim.nodes[idx].visited = true
+            push!(prim.mst, edge)
+            for edge in inEdges(node, prim.edges)
+                push!(priorList,edge)
+            end
+        end
+    end
+    prim.mst
 end

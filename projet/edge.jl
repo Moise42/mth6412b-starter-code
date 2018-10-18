@@ -1,5 +1,4 @@
 import Base.isless
-include("./node.jl")
 
 """Type abstrait dont d'autres types de edge dériveront."""
 abstract type AbstractEdge{T} end
@@ -29,3 +28,14 @@ end
 
 """Surchage de l operateur inferieur qui permettra de trier un tableau d aretes par ordre de poids avec sort"""
 isless(e1::Edge, e2::Edge) = getWeight(e1) < getWeight(e2)
+
+
+function inEdges(node::AbstractNode, edges::Vector{Edge})
+    result = Vector{Edge}()
+    for edge in edges
+        if edge.node1.data == node.data || edge.node2.data == node.data
+            push!(result,edge)
+        end
+    end
+    return result
+end
