@@ -30,8 +30,8 @@ end
 isless(e1::Edge, e2::Edge) = getWeight(e1) < getWeight(e2)
 
 
-function inEdges(node::AbstractNode, edges::Vector{Edge})
-    result = Vector{Edge}()
+function inEdges(node::AbstractNode{T}, edges::Vector{Edge{T}}) where T
+    result = Vector{Edge{T}}()
     for edge in edges
         if edge.node1.data == node.data || edge.node2.data == node.data
             push!(result,edge)

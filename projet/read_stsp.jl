@@ -245,7 +245,7 @@ function plot_graph(filename::String)
 end
 
 """Fonction de commodite aui trace le graphe a partir des objets Edges et d un dico de noeuds"""
-function plot_graph(nodes::Dict, edges::Vector{Edge})
+function plot_graph(nodes::Dict, edges::Vector{Edge{T}}) where T
     fig = plot(legend=false)
 
     for edge in edges
@@ -264,24 +264,30 @@ end
 """ Transforme les donnees bruts du graphe en deux vecteur de Nodes et Edges"""
 function dataToNodeAndEdge(nodes_dic::Dict, edges::Tuple)
     ### formatage des noeuds du graphe en type Node
-    N = Vector{Node}();
-    for k in keys(nodes)
+    t = eltype(collect(keys(nodes_dic)));
+    N = Vector{Node{t}}();
+    for k in keys(nodes_dic)
         node = Node(graph_file,k)
         node.parent = node;
         push!(N,node)
     end
 
     ### formatage des aretes du graphe en type Edge
-    E = Vector{Edge}();
+    E = Vector{Edge{t}}();
     es = edges[1]
     ws = edges[2]
     for k = 1:length(es)
         ed = es[k]
-        node1 = Node(graph_file, ed[1])
-        node2 = Node(graph_file, ed[2])
-        node1.parent = node1
-        node2.parent = node2
-        push!(E,Edge(node1, node2, ws[k]))
+
+        #node1 = Node(graph_file, ed[1])
+        #node2 = Node(graph_file, ed[2])
+        #node1.parent = node1
+        #node2.parent = node2
+        #push!(E,Edge(node1, node2, ws[k]))
+
+        idx_node1 = findall(x->x.data == ed[1], N)[1]
+        idx_node2 = findall(x->x.data == ed[2], N)[1]
+        push!(E,Edge(N[idx_node1], N[idx_node2], ws[k]))
     end
 
     (N,E)

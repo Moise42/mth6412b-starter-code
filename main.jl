@@ -6,7 +6,7 @@ include("./projet/graph.jl")
 include("./projet/kruskal.jl")
 include("./projet/prim.jl")
 
-graph_file = "dantzig42"
+graph_file = "bayg29"
 graph_path = "./instances/stsp/"*graph_file*".tsp"
 
 
@@ -18,6 +18,8 @@ data = dataToNodeAndEdge(nodes, edges)
 N = data[1]
 E = data[2]
 
+#graph = Graph(graph_file,N, E)
+
 ## Creation de l objet kruskal, et calcul de l arbre de recouvrement minimal
 kruskal = Kruskal(N[:],E[:])
 buildMST!(kruskal)
@@ -27,10 +29,11 @@ prim = Prim(N[:],E[:])
 buildMST!(prim)
 
 ## plot
-plot_graph(nodes, kruskal.edges)
+plot_graph(nodes, E)
 savefig("plot/graph_"*graph_file)
 
 plot_graph(nodes, kruskal.mst)
 savefig("plot/mst_kruskal_"*graph_file)
+
 plot_graph(nodes, prim.mst)
 savefig("plot/mst_prim_"*graph_file)
