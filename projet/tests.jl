@@ -4,6 +4,7 @@ include("./edge.jl")
 include("./graph.jl")
 include("./kruskal.jl")
 include("./read_stsp.jl")
+include("./prim.jl")
 
 """tests de la classe node"""
 node = Node("node", 0)
@@ -55,14 +56,19 @@ graph2 = Graph("graph2", [nodea], [edgea])
 
 """ tests de kruskal"""
 edgee = Edge(nodec, nodea, 3)
-N = Vector{Node}()
+N = Vector{Node{Int64}}()
 push!(N, nodea)
 push!(N, nodeb)
 push!(N, nodec)
-E = Vector{Edge}()
+E = Vector{Edge{Int64}}()
 push!(E, edgea)
 push!(E, edgeb)
 push!(E, edgee)
 kruskal = Kruskal(N[:], E[:])
 buildMST!(kruskal)
 @test kruskal.mst == [edgea, edgeb]
+
+""" tests de prim"""
+prim = Prim(N[:], E[:])
+buildMST!(prim)
+@test prim.mst == [edgea, edgeb]
