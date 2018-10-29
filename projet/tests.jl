@@ -72,3 +72,4 @@ buildMST!(kruskal)
 prim = Prim(N[:], E[:])
 buildMST!(prim)
 @test prim.mst == [edgea, edgeb]
+@test prim.mst_weight == kruskal.mst_weight

@@ -26,7 +26,7 @@ buildMST!(kruskal)
 
 ### Creation de l objet prim, et calcul de l arbre de recouvrement minimal
 prim = Prim(N[:],E[:])
-buildMST!(prim)
+buildMST!(prim,prim.nodes[20])
 
 ## plot
 plot_graph(nodes, E)
