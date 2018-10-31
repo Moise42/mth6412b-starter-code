@@ -34,11 +34,30 @@ function buildMST!(kruskal::Kruskal{T}) where T
             push!(kruskal.mst,edge)
             kruskal.mst_weight = kruskal.mst_weight + edge.weight
             # et on unit les classes d equivalence des deux noeuds
-            class_eq_idx = findall(x->isequal(x.parent,n2.parent), kruskal.nodes)
-            for idx in class_eq_idx
-                kruskal.nodes[idx].parent = n1.parent
-            end
+            #class_eq_idx = findall(x->isequal(x.parent,n2.parent), kruskal.nodes)
+            #for idx in class_eq_idx
+            #    kruskal.nodes[idx].parent = n1.parent
+            #end
+            unionRang!(n1,n2)
         end
     end
     kruskal.mst
+end
+
+function unionRang!(n1::Node{T}, n2::Node{T}) where T
+    if n1.parent.rang == n2.parent.rang
+        n1.parent.rang +=1
+        compressionChemin!(n1,n2)
+    elseif n1.parent.rang > n2.parent.rang
+        compressionChemin!(n1,n2)
+    else
+        compressionChemin!(n2,n1)
+    end
+end
+
+function compressionChemin!(n1::Node{T}, n2::Node{T}) where T
+    class_eq_idx = findall(x->isequal(x.parent,n2.parent), kruskal.nodes)
+    for idx in class_eq_idx
+        kruskal.nodes[idx].parent = n1.parent
+    end
 end

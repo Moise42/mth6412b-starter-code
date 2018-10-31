@@ -54,6 +54,7 @@ add_edge!(graph, edgec)
 graph2 = Graph("graph2", [nodea], [edgea])
 @test show(graph2) == "Graph graph2 has 1 nodes and 1 edge\nNode a, data: 0\nEdge entre a et b de poid 0"
 
+
 """ tests de kruskal"""
 edgee = Edge(nodec, nodea, 3)
 N = Vector{Node{Int64}}()

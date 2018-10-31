@@ -22,10 +22,11 @@ mutable struct Node{T} <: AbstractNode{T}
     data::T
     parent::AbstractNode{T}
     visited::Bool
+    rang::Int64
 end
 
 function Node(name::String, data::T) where T
-    Node{T}(name,data,EmptyNodeType{T}(data),false)
+    Node{T}(name,data,EmptyNodeType{T}(data),false,0)
 end
 
 # on présume que tous les noeuds dérivant d'AbstractNode
