@@ -33,12 +33,11 @@ function buildMST!(kruskal::Kruskal{T}) where T
             # si c est bien le cas, on ajoute l arete a l arbre de recouvrement et on met a jour le poids de l arbre
             push!(kruskal.mst,edge)
             kruskal.mst_weight = kruskal.mst_weight + edge.weight
+
             # et on unit les classes d equivalence des deux noeuds
-            #class_eq_idx = findall(x->isequal(x.parent,n2.parent), kruskal.nodes)
-            #for idx in class_eq_idx
-            #    kruskal.nodes[idx].parent = n1.parent
-            #end
-            unionRang!(n1,n2)
+            unionRang!(n1,n2) # par l union des rangs
+            # compressionChemin!(n1,n2) # ou par la compression des chemins
+
         end
     end
     kruskal.mst

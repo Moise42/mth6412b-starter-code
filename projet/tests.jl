@@ -34,6 +34,10 @@ nodea = Node("a", 0)
 nodeb = Node("b", 1)
 nodec = Node("c", 2)
 noded = Node("d", 3)
+nodea.parent = nodea;
+nodeb.parent = nodeb;
+nodec.parent = nodec;
+noded.parent = noded;
 
 edgea = Edge(nodea, nodeb, 0)
 edgeb = Edge(nodeb, nodec, 1)
@@ -68,6 +72,7 @@ push!(E, edgee)
 kruskal = Kruskal(N[:], E[:])
 buildMST!(kruskal)
 @test kruskal.mst == [edgea, edgeb]
+@test kruskal.mst_weight == 1
 
 """ tests de prim"""
 prim = Prim(N[:], E[:])

@@ -6,7 +6,7 @@ include("./projet/graph.jl")
 include("./projet/kruskal.jl")
 include("./projet/prim.jl")
 
-graph_file = "bayg29"
+graph_file = "gr120"
 graph_path = "./instances/stsp/"*graph_file*".tsp"
 
 
