@@ -10,11 +10,12 @@ mutable struct Prim{T} <: AbstractPrim{T}
     edges::Vector{Edge{T}}
     mst::Vector{Edge{T}}
     mst_weight::Integer
+    order_of_visit::Vector{Node{T}}
 end
 
 """Constructeur initialisant l arbre de recouvrement a un tableau d aretes vide, et triant les aretes par poids"""
 function Prim(nodes::Vector{Node{T}}, edges::Vector{Edge{T}}) where T
-    Prim(nodes,edges,Vector{Edge{T}}(),0)
+    Prim(nodes,edges,Vector{Edge{T}}(),0,Vector{Node{T}}())
 end
 
 
@@ -23,6 +24,7 @@ function buildMST!(prim::Prim{T},node::Node{T}=prim.nodes[1]) where T
     prim.mst = Vector{Edge{T}}()
     prim.mst_weight = 0
     node.visited = true
+    push!(prim.order_of_visit, node)
     # algorithme de prim, la liste de priorite contient les aretes sortante du noeud de depart
     priorityQueue = inEdges(node, prim.edges)
     while !isempty(priorityQueue)
@@ -34,12 +36,12 @@ function buildMST!(prim::Prim{T},node::Node{T}=prim.nodes[1]) where T
         edge.node1.visited ? node = edge.node2 : node = edge.node1
         if node.visited == false
             node.visited = true
-
+            push!(prim.order_of_visit, node)
             # on ajoute l arete a l arbre de recouvrement minimal en mettant a jour son poids
             push!(prim.mst, edge)
             prim.mst_weight = prim.mst_weight + edge.weight
             for edge in inEdges(node, prim.edges)
-                # on ajoute a la file de priorite toutes les aretes sortantes du nouveau noeud visite 
+                # on ajoute a la file de priorite toutes les aretes sortantes du nouveau noeud visite
                 push!(priorityQueue,edge)
             end
         end

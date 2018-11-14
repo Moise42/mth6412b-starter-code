@@ -6,7 +6,7 @@ include("./projet/graph.jl")
 include("./projet/kruskal.jl")
 include("./projet/prim.jl")
 
-graph_file = "gr120"
+graph_file = "bays29"
 graph_path = "./instances/stsp/"*graph_file*".tsp"
 
 
@@ -26,14 +26,40 @@ buildMST!(kruskal)
 
 ### Creation de l objet prim, et calcul de l arbre de recouvrement minimal
 prim = Prim(N[:],E[:])
-buildMST!(prim,prim.nodes[20])
+buildMST!(prim,prim.nodes[1])
+
+## RST algorithm
+
+circuit_nodes = prim.order_of_visit
+n = length(circuit_nodes)
+T = typeof(circuit_nodes[1].data)
+circuit_edges = Vector{Edge{T}}()
+circuit_weight = 0;
+for k = 1:n-1
+    e_idx = findall(x-> ( isequal(x.node1,circuit_nodes[k]) && isequal(x.node2,circuit_nodes[k+1])
+    || isequal(x.node1,circuit_nodes[k+1]) && isequal(x.node2,circuit_nodes[k])  ), E)[1]
+    push!(circuit_edges, E[e_idx]);
+    circuit_weight += E[e_idx].weight;
+end
+e_idx = findall(x-> ( isequal(x.node1,circuit_nodes[1]) && isequal(x.node2,circuit_nodes[n])
+|| isequal(x.node1,circuit_nodes[n]) && isequal(x.node2,circuit_nodes[1])  ), E)[1]
+push!(circuit_edges, E[e_idx]);
+circuit_weight += E[e_idx].weight;
+
+
+
+
+
 
 ## plot
-plot_graph(nodes, E)
-savefig("plot/graph_"*graph_file)
+# plot_graph(nodes, E)
+# savefig("plot/graph_"*graph_file)
 
-plot_graph(nodes, kruskal.mst)
-savefig("plot/mst_kruskal_"*graph_file)
+# plot_graph(nodes, kruskal.mst)
+# savefig("plot/mst_kruskal_"*graph_file)
 
-plot_graph(nodes, prim.mst)
-savefig("plot/mst_prim_"*graph_file)
+# plot_graph(nodes, prim.mst)
+# savefig("plot/mst_prim_"*graph_file)
+
+plot_graph(nodes, circuit_edges)
+savefig("plot/circuit_"*graph_file)
