@@ -2,7 +2,7 @@ include("./prim.jl")
 
 
 
-function rst!(prim::Prim{T}) where T
+function rsl!(prim::Prim{T}) where T
     circuit_nodes = prim.order_of_visit
     n = length(circuit_nodes)
     T = typeof(circuit_nodes[1].data)

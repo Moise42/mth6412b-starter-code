@@ -5,7 +5,7 @@ include("./projet/read_stsp.jl")
 include("./projet/graph.jl")
 include("./projet/kruskal.jl")
 include("./projet/prim.jl")
-include("./projet/rst.jl")
+include("./projet/rsl.jl")
 
 graph_file = "bays29"
 graph_path = "./instances/stsp/"*graph_file*".tsp"
@@ -47,7 +47,7 @@ buildMST!(prim,prim.nodes[1])
 #push!(circuit_edges, E[e_idx]);
 #circuit_weight += E[e_idx].weight;
 
-circuit_edges = rst!(prim)
+circuit_edges = rsl!(prim)
 
 
 
