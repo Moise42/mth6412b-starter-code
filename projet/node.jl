@@ -47,5 +47,14 @@ function show(node::AbstractNode)
     s
 end
 
+function reset_nodes(nodes::Vector{Node{T}}) where T
+    for node in nodes
+        node.parent = node
+        node.visited = false
+        node.rang = 0
+    end
+end
+
+
 """Methode egale"""
 isequal(n1::Node, n2::Node) = getData(n1) == getData(n2)
