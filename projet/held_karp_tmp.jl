@@ -1,9 +1,10 @@
-
+./include("./MST.jl")
+./include("./graph.jl")
 
 ############## HK ##############
 
 
-
+function hk(G::Graph{T}, use_prim::Bool)
 ## Init
 n = size(N)[1]
 k = 0 # compteur d etape
@@ -11,8 +12,9 @@ k = 0 # compteur d etape
 W = -Inf
 E_1_tree = nothing
 N_1_tree = nothing
+v = ones(n)
 
-while (k<1000)
+while (v!=zeros(n) && k<1000)
     ## 1-tree
     G_1_tree = deepcopy(G)
     N_1_tree = G_1_tree.nodes
@@ -25,9 +27,13 @@ while (k<1000)
     removed_edges_idx = findall(x -> (x.node1 == N[removed_node_idx] || x.node2 == N[removed_node_idx]), E);
     deleteat!(E_1_tree, removed_edges_idx);
     # on construit le MST de ce nouveau graphe
-    prim_1_tree = Prim(N_1_tree, E_1_tree)
-    buildMST!(prim_1_tree,prim_1_tree.nodes[1])
-    E_1_tree = prim_1_tree.mst[:]
+    graphe = Graph(getName(G_1_tree),N_1_tree, E_1_tree)
+    mst_1_tree = MST(graphe)
+    if use_prim
+        E_1_tree = buildMST_prim(mst_1_tree)
+    else
+        E_1_tree = buildMST_kruskal(mst_1_tree)
+
     # on rajoute le noeud et deux aretes partant de ce noeud
     N_1_tree = deepcopy(G.nodes)
     added_edges_idx = removed_edges_idx[randperm(length(removed_edges_idx))[1:2]]
@@ -65,5 +71,6 @@ while (k<1000)
     end
 
 end
-
+return E_1_tree
+end
 ###################################
