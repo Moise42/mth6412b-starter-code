@@ -10,7 +10,7 @@ include("./projet/prim.jl")
 include("./projet/MST.jl")
 # include("./projet/RSL.jl")
 
-graph_file = "pa561"
+graph_file = "bayg29"
 graph_path = "./instances/stsp/"*graph_file*".tsp"
 
 
@@ -38,7 +38,7 @@ circ_weights = Vector{Integer}()
 mst = nothing;
 circuit_edges = nothing;
 
-for j = 1:10
+for j = 1:size_nodes
 
     ## avec Kruskal
     mst = MST(deepcopy(G))
