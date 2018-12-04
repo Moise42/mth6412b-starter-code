@@ -69,11 +69,29 @@ function hk(G::Graph{T}, use_prim::Bool=false, nb_iterations::Integer=100) where
         end
     end
 
-    # pas de tournee trouvee
 
 
-    return G2, v, n
-    #return circuit_edges, circuit_weight
+    if v != zeros(n)
+        # si pas de tournee trouvee on en creait une a partir de RSL et du graphe avec les poids modifies
+        circuit_edges_HK = nothing
+        circuit_weight = nothing
+        reset_graph!(G2)
+        circuit_edges_HK, circuit_weight = rsl(G2, use_prim)
+    else
+        # sinon la tournee est le 1_tree
+        circuit_edges_HK = E_1_tree
+    end
+
+    ## calcul du vrai poids la tournee trouvee
+    circuit_weight_HK = 0
+    for edg in circuit_edges_HK
+        edg_idx = findall(x -> (isequal(x.node1,edg.node1) && isequal(x.node2,edg.node2) ||
+        isequal(x.node1,edg.node2) && isequal(x.node2,edg.node1)), G.edges)[1]
+        circuit_weight_HK += G.edges[edg_idx].weight
+    end
+
+
+    return circuit_edges_HK, circuit_weight_HK
 end
 
 ###################################

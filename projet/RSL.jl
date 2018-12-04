@@ -18,7 +18,9 @@ function rsl(G::Graph{T}, use_prim::Bool=false) where T
     T = typeof(mst.order_of_visit[1].data)
     circuit_edges = Vector{Edge{T}}()
     circuit_weight = 0;
+    order_of_visit_data = Vector{T}()
     for k = 1:n-1
+        push!(order_of_visit_data, mst.order_of_visit[k].data)
         e_idx = findall(x-> ( isequal(x.node1,mst.order_of_visit[k]) && isequal(x.node2,mst.order_of_visit[k+1])
         || isequal(x.node1,mst.order_of_visit[k+1]) && isequal(x.node2,mst.order_of_visit[k])  ), mst.graph.edges)[1]
         push!(circuit_edges, mst.graph.edges[e_idx]);
@@ -29,7 +31,7 @@ function rsl(G::Graph{T}, use_prim::Bool=false) where T
     push!(circuit_edges, mst.graph.edges[e_idx]);
     circuit_weight += mst.graph.edges[e_idx].weight;
 
-    return circuit_edges, circuit_weight
+    return circuit_edges, circuit_weight, order_of_visit_data
 end
 
 
