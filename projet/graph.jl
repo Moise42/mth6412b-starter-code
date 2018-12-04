@@ -35,6 +35,21 @@ function add_edge!(graph::Graph{T}, edge::Edge{T}) where T
 	graph
 end
 
+"""Reset"""
+function reset_graph!(graph::Graph{T}) where T
+	for n in graph.nodes
+		n.visited = false
+		n.rang = 0
+		n.parent = n
+	end
+	for edg in graph.edges
+		n1_idx = findall(x -> isequal(edg.node1,x), graph.nodes)[1]
+		n2_idx = findall(x -> isequal(edg.node2,x), graph.nodes)[1]
+		edg.node1 = graph.nodes[n1_idx]
+		edg.node2 = graph.nodes[n2_idx]
+	end
+end
+
 """Renvoie le nom du graphe."""
 getName(graph::AbstractGraph) = graph.name
 
