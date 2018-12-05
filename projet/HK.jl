@@ -10,16 +10,21 @@ function hk(G::Graph{T}, use_prim::Bool=false, nb_iterations::Integer=100) where
     N_1_tree = nothing
     v = ones(n)
 
+    weights = Vector{Integer}()
+    for edg in G.edges
+        push!(weights, edg.weight)
+    end
 
     while (v!=zeros(n) && k < nb_iterations)
 
         ## 1-tree
         G_1_tree = deepcopy(G2)
+        # G_1_tree = G2
         N_1_tree = G_1_tree.nodes
         E_1_tree = G_1_tree.edges
         # on enleve un noeud
         removed_node_idx = rand(1:n)
-        source = N_1_tree[removed_node_idx];
+        # source = N_1_tree[removed_node_idx];
         deleteat!(N_1_tree, removed_node_idx);
         # on enleve les aretes de ce noeud
         removed_edges_idx = findall(x -> (x.node1 == G2.nodes[removed_node_idx] || x.node2 == G2.nodes[removed_node_idx]), G2.edges);
@@ -53,7 +58,7 @@ function hk(G::Graph{T}, use_prim::Bool=false, nb_iterations::Integer=100) where
         end
         v = d - ones(n)*2
         if v == zeros(n)
-            println("HK finished")
+            println("HK finished en $k iterations")
         end
         #t = 1/(k+1) # step
         t = 1
@@ -61,37 +66,61 @@ function hk(G::Graph{T}, use_prim::Bool=false, nb_iterations::Integer=100) where
         k += 1
 
         ## MAJ des poids des aretes
-        G2 = deepcopy(G)
-        for edg in G2.edges
-            node1_idx = findall(x -> isequal(x,edg.node1), N_1_tree)[1]
-            node2_idx = findall(x -> isequal(x,edg.node2), N_1_tree)[1]
-            edg.weight += floor(Π[node1_idx] + Π[node2_idx])
+        # G2 = deepcopy(G)
+        # for edg in G2.edges
+        #     node1_idx = findall(x -> isequal(x,edg.node1), N_1_tree)[1]
+        #     node2_idx = findall(x -> isequal(x,edg.node2), N_1_tree)[1]
+        #     edg.weight += floor(Π[node1_idx] + Π[node2_idx])
+        # end
+
+        for edg_idx = 1 : length(G2.edges)
+            node1_idx = findall(x -> isequal(x,G2.edges[edg_idx].node1), N_1_tree)[1]
+            node2_idx = findall(x -> isequal(x,G2.edges[edg_idx].node2), N_1_tree)[1]
+            G2.edges[edg_idx].weight = weights[edg_idx] + floor(Π[node1_idx] + Π[node2_idx])
         end
     end
 
 
+    order_of_visit_data = Vector{T}()
+    order_of_visit = Vector{Node{T}}()
+    circuit_edges = nothing
+    circuit_weight = nothing
 
     if v != zeros(n)
         # si pas de tournee trouvee on en creait une a partir de RSL et du graphe avec les poids modifies
-        circuit_edges_HK = nothing
-        circuit_weight = nothing
         reset_graph!(G2)
-        circuit_edges_HK, circuit_weight = rsl(G2, use_prim)
+        circuit_edges, circuit_weight, order_of_visit_data = rsl(G2, use_prim)
     else
         # sinon la tournee est le 1_tree
-        circuit_edges_HK = E_1_tree
+        circuit_edges = deepcopy(E_1_tree)
+        push!(order_of_visit, N[1])
+        push!(order_of_visit_data, N[1].data)
+        for j = 1 : n-1
+
+            node = order_of_visit[end]
+            edge_idx = findall(x -> isequal(x.node1,node) || isequal(x.node2,node), E_1_tree)[1]
+            if isequal(E_1_tree[edge_idx].node1, node)
+                push!(order_of_visit, E_1_tree[edge_idx].node2)
+                push!(order_of_visit_data, E_1_tree[edge_idx].node2.data)
+            else
+                push!(order_of_visit, E_1_tree[edge_idx].node1)
+                push!(order_of_visit_data, E_1_tree[edge_idx].node1.data)
+            end
+            deleteat!(E_1_tree, edge_idx)
+        end
+
     end
 
     ## calcul du vrai poids la tournee trouvee
-    circuit_weight_HK = 0
-    for edg in circuit_edges_HK
+    circuit_weight = 0
+    for edg in circuit_edges
         edg_idx = findall(x -> (isequal(x.node1,edg.node1) && isequal(x.node2,edg.node2) ||
         isequal(x.node1,edg.node2) && isequal(x.node2,edg.node1)), G.edges)[1]
-        circuit_weight_HK += G.edges[edg_idx].weight
+        circuit_weight += G.edges[edg_idx].weight
     end
 
 
-    return circuit_edges_HK, circuit_weight_HK
+    return circuit_edges, circuit_weight, order_of_visit_data
 end
 
 ###################################
