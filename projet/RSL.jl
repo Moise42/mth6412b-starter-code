@@ -15,7 +15,7 @@ function rsl(G::Graph{T}, use_prim::Bool=false) where T
     end
 
     n = length(mst.order_of_visit)
-    T = typeof(mst.order_of_visit[1].data)
+    # T = typeof(mst.order_of_visit[1].data)
     circuit_edges = Vector{Edge{T}}()
     circuit_weight = 0;
     order_of_visit_data = Vector{T}()

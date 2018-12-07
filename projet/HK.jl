@@ -17,6 +17,8 @@ function hk(G::Graph{T}, use_prim::Bool=false, nb_iterations::Integer=100) where
 
     while (v!=zeros(n) && k < nb_iterations)
 
+        println("iteration $k / $nb_iterations")
+
         ## 1-tree
         G_1_tree = deepcopy(G2)
         # G_1_tree = G2
@@ -61,7 +63,7 @@ function hk(G::Graph{T}, use_prim::Bool=false, nb_iterations::Integer=100) where
             println("HK finished en $k iterations")
         end
         #t = 1/(k+1) # step
-        t = 1
+        t = 1/sqrt(k+1)
         Π = Π + t*v
         k += 1
 
