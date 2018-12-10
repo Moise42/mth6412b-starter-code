@@ -1,22 +1,25 @@
 using Random
 # using ImageView, Images
-import Base.isless, Base.isequal
+import Base.isless, Base.isequal, Base.popfirst!, Base.push!
 
 include("./projet/node.jl")
 include("./projet/edge.jl")
 include("./projet/read_stsp.jl")
 include("./projet/graph.jl")
+include("./projet/priorityQueue.jl")
 include("./projet/MST.jl")
 include("./projet/RSL.jl")
 include("./projet/HK.jl")
+include("./projet/reorder_picture.jl")
 
 include("./shredder-julia/bin/tools.jl")
 
-graph_file = "bays29"
+graph_file = "gr120"
 graph_path = "./instances/stsp/"*graph_file*".tsp"
 
 
 ## Recuperation des aretes et noeuds d un graphe
+println("chargement du graphe ..")
 header = read_header(graph_path)
 edges = read_edges(header, graph_path)
 nodes = read_nodes(header, graph_path)
@@ -28,11 +31,22 @@ useless_edges_idx = find(x -> isequal(x.node1, x.node2), E)
 deleteat!(E, useless_edges_idx)
 G = Graph(graph_file,N, E)
 
+## priority queue
+# L = [3,6,1,5,9,4,7]
+# sort!(L)
+# L = [1,3,4,6,7,9,11]
+# p = PriorityQueue(L)
+# push!(p,0)
+# println(p.queue)
+# popfirst!(p)
+# println(p.queue)
 
 ## MST
-# mst = MST(deepcopy(G))
+println("calcul du MST")
+mst = MST(deepcopy(G))
 # buildMST_kruskal!(mst)
-# buildMST_prim!(mst)
+buildMST_prim!(mst)
+
 
 
 ## Circuits
@@ -45,43 +59,17 @@ G = Graph(graph_file,N, E)
 
 
 ## Images
-picture_name = "alaska-railroad"
-picture_path = "./shredder-julia/images/shuffled/"*picture_name*".png"
-picture = load(picture_path)
-nb_row, nb_col = size(picture)
-
-N = Vector{Node{Int64}}()
-# creation des noeuds sans oublier le noeud 0
-for k = 0 : nb_col
-    nd = Node(picture_name,k)
-    nd.parent = nd;
-    push!(N, nd)
-end
-
-# creation des aretes
-E = Vector{Edge{Int64}}()
-w = zeros(nb_col, nb_col)
-for j1 = 1 : nb_col
-    for j2 = j1 + 1 : nb_col
-        w[j1, j2] = compare_columns(picture[:, j1], picture[:, j2])
-        push!(E, Edge(N[j1+1], N[j2+1], floor(Int, w[j1, j2])))
-    end
-end
-# on n oublie pas les aretes de poids nul reliant le noeud 0 au reste du graphe
-for j1 = 1 : nb_col
-    push!(E, Edge(N[1], N[j1], 0))
-end
-
-G = Graph(picture_name,N,E)
-
-circuit_edges_RSL, circuit_weight_RSL, tour = rsl(G, false)
-# circuit_edges_HK, circuit_weight_HK, tour = hk(G, false, 100)
-
-write_tour(picture_name*".tour", tour, float32(circuit_weight_RSL))
-reconstruct_picture(picture_name*".tour", picture_path, picture_name*".png", view = false)
+# picture_name = "pizza-food-wallpaper"
+# # picture_name = "nikos-cat"
+# picture_path = "./shredder-julia/images/shuffled/"*picture_name*".png"
+# use_HK = true # HK ou RSL
+# use_prim = false
+# nb_iteration_HK = 1000
+#
+# reorder_picture(picture_name, picture_path, use_HK, use_prim, nb_iteration_HK)
 
 
-#reconstruct_picture("shredder-julia/tsp/tours/alaska-railroad.tour", picture_path, picture_name*".png", view = false)
+
 
 ##### PLOT #####
 
@@ -91,7 +79,8 @@ reconstruct_picture(picture_name*".tour", picture_path, picture_name*".png", vie
 
 ## MST
 # plot_graph(nodes, mst.mst_edges)
-# savefig("plot/mst/mst_"*graph_file)
+# savefig("plot/mst/mst_kruskal_"*graph_file)
+# savefig("plot/mst/mst_prim_"*graph_file)
 
 ## Circuits
 # RSL

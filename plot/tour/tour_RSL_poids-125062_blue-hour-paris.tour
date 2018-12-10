@@ -1,5 +1,5 @@
-NAME : alaska-railroad.tour
-COMMENT : LENGHT = 116404.0
+NAME : plot/tour/tour_RSL_poids-125062_blue-hour-paris.tour
+COMMENT : LENGHT = 125062.0
 TYPE : TOUR
 DIMENSION : 600
 TOUR_SECTION
@@ -294,6 +294,7 @@ TOUR_SECTION
 313
 312
 311
+601
 310
 309
 308
@@ -379,7 +380,6 @@ TOUR_SECTION
 228
 227
 226
-601
 225
 224
 223

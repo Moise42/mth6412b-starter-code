@@ -46,17 +46,64 @@ end
 
 
 """Construit l arbre de recouvrement minimal a partir de nodes et edges, et le store dans mst"""
+# function buildMST_prim!(mst::MST{T},node::Node{T}=mst.graph.nodes[1]) where T
+#     mst.mst_edges = Vector{Edge{T}}()
+#     mst.mst_weight = 0
+#     node.visited = true
+#     push!(mst.order_of_visit, node)
+#     # algorithme de prim, la liste de priorite contient les aretes sortante du noeud de depart
+#     priorityQueue = inEdges(node, mst.graph.edges)
+#     while !isempty(priorityQueue)
+#         # l arete de poid le plus faible dans la file de priorite est selectionnee
+#         sort!(priorityQueue)
+#         edge = popfirst!(priorityQueue)
+#
+#         # on verifie que l on ne forme pas de cycles
+#         edge.node1.visited ? node = edge.node2 : node = edge.node1
+#         if node.visited == false
+#             node.visited = true
+#             push!(mst.order_of_visit, node)
+#             # on ajoute l arete a l arbre de recouvrement minimal en mettant a jour son poids
+#             push!(mst.mst_edges, edge)
+#             mst.mst_weight = mst.mst_weight + edge.weight
+#             for edge in inEdges(node, mst.graph.edges)
+#                 # on ajoute a la file de priorite toutes les aretes sortantes du nouveau noeud visite
+#                 push!(priorityQueue,edge)
+#             end
+#         end
+#     end
+#     mst
+# end
+
 function buildMST_prim!(mst::MST{T},node::Node{T}=mst.graph.nodes[1]) where T
     mst.mst_edges = Vector{Edge{T}}()
     mst.mst_weight = 0
     node.visited = true
     push!(mst.order_of_visit, node)
     # algorithme de prim, la liste de priorite contient les aretes sortante du noeud de depart
-    priorityQueue = inEdges(node, mst.graph.edges)
-    while !isempty(priorityQueue)
+    # println("u")
+    dic = Dict{Node{Int64}, Vector{Edge{Int64}}}()
+    for n in mst.graph.nodes
+        dic[n] = []
+    end
+    for e in mst.graph.edges
+        push!(dic[e.node1], e)
+        push!(dic[e.node2], e)
+    end
+    # println("a")
+
+    # priorityQueue = inEdges(node, mst.graph.edges)
+    priorityQueue = PriorityQueue(dic[node])
+    while !isempty(priorityQueue.queue)
         # l arete de poid le plus faible dans la file de priorite est selectionnee
-        sort!(priorityQueue)
+        # sort!(priorityQueue)
+        # edge = popfirst!(priorityQueue)
+
+        # edge_idx = argmin(priorityQueue)
+        # edge = priorityQueue[edge_idx]
+        # deleteat!(priorityQueue, edge_idx)
         edge = popfirst!(priorityQueue)
+
 
         # on verifie que l on ne forme pas de cycles
         edge.node1.visited ? node = edge.node2 : node = edge.node1
@@ -66,7 +113,8 @@ function buildMST_prim!(mst::MST{T},node::Node{T}=mst.graph.nodes[1]) where T
             # on ajoute l arete a l arbre de recouvrement minimal en mettant a jour son poids
             push!(mst.mst_edges, edge)
             mst.mst_weight = mst.mst_weight + edge.weight
-            for edge in inEdges(node, mst.graph.edges)
+            # for edge in inEdges(node, mst.graph.edges)
+            for edge in dic[node]
                 # on ajoute a la file de priorite toutes les aretes sortantes du nouveau noeud visite
                 push!(priorityQueue,edge)
             end

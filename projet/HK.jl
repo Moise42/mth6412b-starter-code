@@ -1,6 +1,7 @@
-function hk(G::Graph{T}, use_prim::Bool=false, nb_iterations::Integer=100) where T
+function hk(G::Graph{T}, use_prim::Bool=false, nb_iterations::Int64=100) where T
     ## Init
     G2 = deepcopy(G)
+    E = G.edges
     n = size(G2.nodes)[1]
     k = 0 # compteur d etape
     Π = zeros(n)
