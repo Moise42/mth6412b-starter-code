@@ -78,6 +78,7 @@ function reconstruct_picture(tour_filename::String, input_name::String, output_n
 			end
 		end
 	end
+	
 	close(file)
 	shuffled_picture = load(input_name)
 	reconstructed_picture = shuffled_picture[:,tour[2:end]]

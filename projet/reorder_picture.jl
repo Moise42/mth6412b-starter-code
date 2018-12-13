@@ -29,13 +29,13 @@ function reorder_picture(picture_name::String, picture_path::String, use_HK::Boo
 
     if use_HK
         circuit_edges_HK, circuit_weight_HK, tour = hk(G, use_prim, nb_iteration_HK)
-        save_name = "tour_HK_poids-$circuit_weight_HK"*"_it-$nb_iteration_HK"*"_"*picture_name
+        save_name = "tour_HK_poids-$circuit_weight_HK"*"_it-$nb_iteration_HK"*"_useprim-$use_prim"*"_"*picture_name
         write_tour("plot/tour/"*save_name*".tour", tour, float32(circuit_weight_HK))
         reconstruct_picture("plot/tour/"*save_name*".tour", picture_path, "plot/image/"*save_name*".png", view = false)
 
     else
         circuit_edges_RSL, circuit_weight_RSL, tour = rsl(G, use_prim)
-        save_name = "tour_RSL_poids-$circuit_weight_RSL"*"_"*picture_name
+        save_name = "tour_RSL_poids-$circuit_weight_RSL"*"_useprim-$use_prim"*"_"*picture_name
         write_tour("plot/tour/"*save_name*".tour", tour, float32(circuit_weight_RSL))
         reconstruct_picture("plot/tour/"*save_name*".tour", picture_path, "plot/image/"*save_name*".png", view = false)
     end

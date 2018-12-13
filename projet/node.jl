@@ -58,3 +58,6 @@ end
 
 """Methode egale"""
 isequal(n1::Node, n2::Node) = getData(n1) == getData(n2)
+
+"""Methode isless"""
+isless(n1::Node, n2::Node) = getData(n1) < getData(n2)

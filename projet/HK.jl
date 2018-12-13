@@ -1,7 +1,9 @@
 function hk(G::Graph{T}, use_prim::Bool=false, nb_iterations::Int64=100) where T
     ## Init
     G2 = deepcopy(G)
+    name = G.name
     E = G.edges
+    N = G.nodes
     n = size(G2.nodes)[1]
     k = 0 # compteur d etape
     Π = zeros(n)
@@ -18,7 +20,7 @@ function hk(G::Graph{T}, use_prim::Bool=false, nb_iterations::Int64=100) where T
 
     while (v!=zeros(n) && k < nb_iterations)
 
-        println("iteration $k / $nb_iterations")
+        println("$name : iteration $k / $nb_iterations")
 
         ## 1-tree
         G_1_tree = deepcopy(G2)
@@ -36,19 +38,30 @@ function hk(G::Graph{T}, use_prim::Bool=false, nb_iterations::Int64=100) where T
         G_1_tree = Graph(getName(G_1_tree),N_1_tree, E_1_tree)
         mst_1_tree = MST(G_1_tree)
         if use_prim
-            buildMST_prim!(mst_1_tree)
+            buildMST_prim!(mst_1_tree)#, mst_1_tree.graph.nodes[rand(1:n-1)])
         else
             buildMST_kruskal!(mst_1_tree)
         end
         E_1_tree = mst_1_tree.mst_edges
         # on rajoute le noeud et deux aretes partant de ce noeud
         N_1_tree = deepcopy(G2.nodes)
-        added_edges_idx = removed_edges_idx[randperm(length(removed_edges_idx))[1:2]]
+        # added_edges_idx = removed_edges_idx[randperm(length(removed_edges_idx))[1:2]]
+        # on peut choisir les deux aretes de poids minimal
+        M = deepcopy(G.edges[removed_edges_idx])
+        idx_1 = findmin(G.edges[removed_edges_idx])[2]
+        M[idx_1].weight = 1000000
+        idx_2 = findmin(M)[2]
+        added_edges_idx = removed_edges_idx[[idx_1,idx_2]]
+
+
         push!(E_1_tree, deepcopy(G2.edges[added_edges_idx[1]]))
         push!(E_1_tree, deepcopy(G2.edges[added_edges_idx[2]]))
+
+
+
         # Longueur du 1-tree
         L = mst_1_tree.mst_weight + E[added_edges_idx[1]].weight + E[added_edges_idx[2]].weight
-
+        # println([E[added_edges_idx[1]].weight, E[added_edges_idx[2]].weight])
 
         z = L - 2*sum(Π)
         W = max(W, z)

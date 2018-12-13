@@ -15,11 +15,11 @@ function read_header(filename::String)
 
     for line in eachline(file)
         line = strip(line)
-        data = split(line, ": ")
+        data = split(line, ":")
         if length(data) >= 2
-            firstword = data[1]
+            firstword = strip(data[1])
             if firstword in sections
-                header[firstword] = data[2]
+                header[firstword] = strip(data[2])
             end
         end
     end
@@ -32,7 +32,7 @@ Si les coordonnees ne sont pas donnees, un dictionnaire vide est renvoye.
 Le nombre de noeuds est dans header["DIMENSION"]."""
 function read_nodes(header::Dict{String}{String}, filename::String)
 
-    nodes = Dict{Int}{Array{Float64}}()
+    nodes = Dict{Int}{Vector{Float64}}()
     node_coord_type = header["NODE_COORD_TYPE"]
     display_data_type = header["DISPLAY_DATA_TYPE"]
 
@@ -101,6 +101,7 @@ function read_edges(header::Dict{String}{String}, filename::String)
     "UPPER_DIAG_COL", "LOWER_DIAG_COL"]
 
     if !(edge_weight_format in known_edge_weight_formats)
+        @warn "unknown edge weight format" edge_weight_format
         return edges
     end
 

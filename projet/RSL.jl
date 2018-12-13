@@ -26,6 +26,7 @@ function rsl(G::Graph{T}, use_prim::Bool=false) where T
         push!(circuit_edges, mst.graph.edges[e_idx]);
         circuit_weight += mst.graph.edges[e_idx].weight;
     end
+    push!(order_of_visit_data, mst.order_of_visit[n].data)
     e_idx = findall(x-> ( isequal(x.node1,mst.order_of_visit[1]) && isequal(x.node2,mst.order_of_visit[n])
     || isequal(x.node1,mst.order_of_visit[n]) && isequal(x.node2,mst.order_of_visit[1])  ), mst.graph.edges)[1]
     push!(circuit_edges, mst.graph.edges[e_idx]);
